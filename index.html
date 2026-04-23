@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY INTEL DASHBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: #e5e0d8;
+  --accent: #e8640c;
+  --accent-light: #fff0e6;
+  --accent-hover: #c9530a;
+  --text: #1a1714;
+  --text-mid: #6b6259;
+  --text-dim: #a89f94;
+  --up: #2d8c4e;
+  --down: #c0392b;
+  --up-bg: #eaf5ee;
+  --down-bg: #fdecea;
+  --font-body: 'DM Sans', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--font-body); min-height:100vh; font-size:14px; line-height:1.5; }
+
+header {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.logo{
+
+  display:flex;
+
+  align-items:center;
+
+}
+.logo-text{
+
+  display:flex;
+
+  align-items:flex-end;
+
+  gap:10px;
+
+}
+.logo-title{
+
+  font-weight:700;
+
+  letter-spacing:.04em;
+
+}
+.creator-tag{
+
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.12em;
+
+  color:#a89f94;
+
+  margin-bottom:2px;
+
+}
+
+.live-pulse{
+
+  width:10px;
+
+  height:10px;
+
+  border-radius:50%;
+
+  background:#e8640c;
+
+  position:relative;
+
+  margin-right:20px;
+
+  flex-shrink:0;
+
+}
+
+.live-pulse::before,
+
+.live-pulse::after{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  border-radius:50%;
+
+  border:2px solid #e8640c;
+
+  animation:
+
+    ripple 2s infinite;
+
+  opacity:0;
+
+}
+
+.live-pulse::after{
+
+  animation-delay:1s;
+
+}
+
+@keyframes ripple{
+
+  0%{
+
+    transform:scale(1);
+
+    opacity:.7;
+
+  }
+
+  100%{
+
+    transform:scale(4);
+
+    opacity:0;
+
+  }
+
+}
+
+@keyframes breathe { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.7} }
+.header-right { display:flex; align-items:center; gap:12px; }
+#clock { font-size:13px; color:var(--text-mid); font-variant-numeric:tabular-nums; }
+.btn { font-family:var(--font-body); font-size:12px; font-weight:500; padding:7px 14px; border-radius:8px; border:1.5px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; transition:background 0.15s,transform 0.1s; }
+.btn:hover { background:var(--accent-hover); border-color:var(--accent-hover); }
+.btn:active { transform:scale(0.97); }
+.btn-ghost { background:transparent; color:var(--accent); }
+.btn-ghost:hover { background:var(--accent-light); }
+
+.grid { display:grid; grid-template-columns:340px 1fr 1fr; grid-template-rows:1fr auto; gap:16px; padding:16px; height:calc(100vh - 57px); }
+
+.panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; overflow:hidden; display:flex; flex-direction:column; }
+.panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-shrink:0; }
+.panel-title { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); }
+.panel-badge { font-size:10px; font-weight:500; padding:3px 8px; border-radius:20px; background:var(--accent-light); color:var(--accent); }
+
+/* NEWS */
+.news-panel { grid-column:1; grid-row:1/3; }
+.news-scroll { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+.news-item { padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:padding-left 0.15s; animation:slideUp 0.4s ease both; }
+.news-item:last-child { border-bottom:none; }
+.news-item:hover { padding-left:5px; }
+@keyframes slideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.news-source {
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.news-title {
+  font-family:var(--font-serif);
+  font-size:19px;
+  line-height:1.55;
+  color:var(--text);
+  font-weight:500;
+}
+.news-meta { display:flex; align-items:center; gap:8px; margin-top:5px; }
+.news-time { font-size:11px; color:var(--text-dim); }
+.news-read-more { font-size:11px; font-weight:500; color:var(--accent); opacity:0; transition:opacity 0.15s; }
+.news-item:hover .news-read-more { opacity:1; }
+
+/* CHARTS */
+.chart-panel { position:relative; }
+.chart-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px; flex-shrink:0; }
+.chart-price { font-family:var(--font-serif); font-size:34px; line-height:1; color:var(--text); letter-spacing:-0.02em; }
+.chart-price sup { font-family:var(--font-body); font-size:15px; vertical-align:super; color:var(--text-mid); }
+.chart-pill { display:inline-block; font-size:12px; font-weight:500; padding:4px 10px; border-radius:20px; margin-top:6px; }
+.chart-pill.up   { background:var(--up-bg);   color:var(--up); }
+.chart-pill.down { background:var(--down-bg); color:var(--down); }
+.chart-wrap { position:relative; flex:1; min-height:0; margin-top:12px; }
+canvas.price-chart { width:100%; height:100%; display:block; cursor:crosshair; }
+.chart-tooltip { position:absolute; background:var(--text); color:#fff; font-size:12px; font-weight:500; padding:5px 10px; border-radius:6px; pointer-events:none; white-space:nowrap; display:none; transform:translateX(-50%); z-index:10; }
+.chart-tooltip::after { content:''; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); border:4px solid transparent; border-bottom:none; border-top-color:var(--text); }
+.crosshair-line { position:absolute; top:0; width:1px; background:var(--border); pointer-events:none; display:none; }
+
+/* TRUMP */
+.trump-panel { grid-column:2; grid-row:2; }
+.truth-scroll { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+.truth-post { padding:14px; background:var(--surface2); border-radius:10px; margin-bottom:10px; animation:slideUp 0.4s ease both; transition:background 0.15s; }
+.truth-post:hover { background:var(--accent-light); }
+.truth-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.truth-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:12px; color:white; font-weight:700; flex-shrink:0; }
+.truth-name { font-size:12px; font-weight:600; }
+.truth-handle { font-size:11px; color:var(--text-dim); }
+.truth-text { font-size:13px; line-height:1.55; }
+.truth-time { font-size:11px; color:var(--text-dim); margin-top:8px; }
+
+/* SENTIMENT */
+.sentiment-panel { grid-column:3; grid-row:2; align-items:center; text-align:center; }
+.gauge-wrap { position:relative; width:160px; height:90px; margin:0 auto 8px; }
+.gauge-score { font-family:var(--font-serif); font-size:40px; letter-spacing:-0.02em; line-height:1; margin:4px 0 2px; }
+.gauge-label { font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-mid); margin-bottom:14px; }
+.signal-grid { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; text-align:left; }
+.signal-card { background:var(--surface2); border-radius:8px; padding:10px 12px; }
+.signal-card-label { font-size:10px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px; }
+.signal-card-value { font-size:14px; font-weight:600; }
+
+.loading-state { color:var(--text-dim); font-size:13px; padding:20px 0; }
+
+#trump-posts {
+
+    overflow-y: auto;
+
+    max-height: 300px;
+
+    padding-right: 6px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+.trump-post {
+
+    background: #f3f0ed;
+
+    border-radius: 18px;
+
+    padding: 16px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.trump-post:hover {
+
+    background: #ffe8dc;
+
+    transform: translateY(-1px);
+
+}
+
+
+.trump-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.trump-avatar {
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #f97316;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+
+}
+
+
+.trump-user {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.trump-name {
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+    color: #111;
+
+}
+
+
+.trump-handle {
+
+    font-size: 12px;
+
+    color: #888;
+
+}
+
+
+.trump-content {
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    color: #222;
+
+}
+
+
+.trump-time {
+
+    margin-top: 12px;
+
+    font-size: 12px;
+
+    color: #999;
+
+}
+
+.market-toolbar{
+
+  display:flex;
+
+  gap:8px;
+
+}
+
+.market-toolbar button{
+
+  border:none;
+
+  background:#f5f1eb;
+
+  color:#6f665c;
+
+  padding:8px 14px;
+
+  border-radius:999px;
+
+  cursor:pointer;
+
+  font-size:12px;
+
+  font-weight:700;
+
+  transition:.2s;
+
+}
+
+.market-toolbar button:hover{
+
+  background:#e8640c;
+
+  color:white;
+
+}
+
+.panel-header{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+}
+
+.header-right{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+}
+
+.market-toolbar button.active{
+
+  background:#e8640c;
+
+  color:white;
+
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+
+ <div class="live-pulse"></div>
+
+  <div class="logo-text">
+
+    <div class="logo-title">
+      INTEL DASHBOARD
+    </div>
+
+
+    <div class="creator-tag">
+      created by Sami
+    </div>
+
+  </div>
+
+</div>
+  <div class="header-right">
+    <span id="clock"></span>
+    <button class="btn btn-ghost" onclick="refreshAll()">↺ Refresh</button>
+    <button class="btn" onclick="refreshAll()">Live</button>
+  </div>
+</header>
+
+<div class="grid">
+
+  <div class="panel news-panel">
+    <div class="panel-header">
+      <span class="panel-title">Geopolitical News</span>
+      <span class="panel-badge" id="news-count">Loading…</span>
+    </div>
+    <div class="news-scroll" id="news-list"><div class="loading-state">Fetching latest news…</div></div>
+  </div>
+
+  
+  <div class="panel chart-panel" style="grid-column:2;grid-row:1">
+    <div class="panel-header">
+
+  <span class="panel-title">
+    Brent Crude Oil
+  </span>
+
+
+  <div class="header-right">
+
+    <div class="market-toolbar">
+
+	  <button
+		class="active"
+		onclick="changeRange('1d', this)"
+	  >
+		1D
+	  </button>
+
+	  <button
+		onclick="changeRange('1w', this)"
+	  >
+		1W
+	  </button>
+
+	  <button
+		onclick="changeRange('1m', this)"
+	  >
+		1M
+	  </button>
+
+	</div>
+
+
+    <span class="panel-badge">
+      BZ=F
+    </span>
+
+  </div>
+
+</div>
+    <div class="chart-top">
+      <div>
+        <div class="chart-price" id="oil-price"><sup>$</sup>--</div>
+        <div class="chart-pill" id="oil-pill">-- %</div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="oil-wrap">
+      <canvas class="price-chart" id="oil-canvas"></canvas>
+      <div class="chart-tooltip" id="oil-tooltip"></div>
+      <div class="crosshair-line" id="oil-crosshair"></div>
+    </div>
+  </div>
+
+  <div class="panel chart-panel" style="grid-column:3;grid-row:1">
+    <div class="panel-header">
+      <span class="panel-title">Gold (XAU/USD)</span>
+      <span class="panel-badge">GC=F</span>
+    </div>
+    <div class="chart-top">
+      <div>
+        <div class="chart-price" id="gold-price"><sup>$</sup>--</div>
+        <div class="chart-pill" id="gold-pill">-- %</div>
+      </div>
+    </div>
+    <div class="chart-wrap" id="gold-wrap">
+      <canvas class="price-chart" id="gold-canvas"></canvas>
+      <div class="chart-tooltip" id="gold-tooltip"></div>
+      <div class="crosshair-line" id="gold-crosshair"></div>
+    </div>
+  </div>
+
+  <div class="panel trump-panel">
+    <div class="panel-header">
+      <span class="panel-title">Truth Social — @realDonaldTrump</span>
+      <span class="panel-badge">Latest posts</span>
+    </div>
+    <div class="truth-scroll" id="trump-posts"><div class="loading-state">Fetching truths…</div></div>
+  </div>
+
+  <div class="panel sentiment-panel">
+    <div class="panel-header" style="width:100%">
+      <span class="panel-title">Market Sentiment (24h)</span>
+    </div>
+    <div class="gauge-wrap">
+      <canvas id="gauge" width="160" height="90"></canvas>
+    </div>
+    <div class="gauge-score" id="sent-score">--</div>
+    <div class="gauge-label" id="sent-label">Analyzing…</div>
+    <div class="signal-grid" id="sent-signals"></div>
+  </div>
+
+</div>
+
+<script>
+const PROXY = 'https://api.allorigins.win/get?url=';
+
+// ── Clock ──────────────────────────────────────────────────────────────────
+function updateClock() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) + ' · ' +
+    n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+setInterval(updateClock, 1000); updateClock();
+
+function timeAgo(d) {
+  const diff = (Date.now() - new Date(d)) / 60000;
+  if (isNaN(diff)||diff<0) return 'just now';
+  if (diff<60) return Math.floor(diff)+'m ago';
+  if (diff<1440) return Math.floor(diff/60)+'h ago';
+  return Math.floor(diff/1440)+'d ago';
+}
+
+// ── Chart with hover ───────────────────────────────────────────────────────
+function setupChart(
+  canvasId,
+  wrapId,
+  tooltipId,
+  crosshairId,
+  data,
+  timestamps,
+  color,
+  fmt
+) {
+
+  const wrap = document.getElementById(wrapId);
+
+  const canvas = document.getElementById(canvasId);
+
+  const tip = document.getElementById(tooltipId);
+
+  const xhair = document.getElementById(crosshairId);
+
+
+  // =========================
+  // CLEAN DATA
+  // =========================
+
+  const merged = data.map((v, i) => ({
+    value: v,
+    time: timestamps[i]
+  }));
+
+
+  const clean = merged.filter(
+    p => p.value != null && !isNaN(p.value)
+  );
+
+
+  if (clean.length < 2) return;
+
+
+  function draw() {
+
+    const W = wrap.offsetWidth;
+
+    const H = wrap.offsetHeight;
+
+
+    canvas.width = W;
+
+    canvas.height = H;
+
+
+    const ctx = canvas.getContext("2d");
+
+
+    const pad = {
+
+      t: 10,
+      b: 24,
+      l: 4,
+      r: 4
+
+    };
+
+
+    const values = clean.map(
+      p => p.value
+    );
+
+
+    const min = Math.min(...values);
+
+    const max = Math.max(...values);
+
+
+    const range = max - min || 1;
+
+
+    const xStep =
+
+      (W - pad.l - pad.r)
+
+      / (clean.length - 1);
+
+
+    function pt(i, v) {
+
+      return {
+
+        x:
+          pad.l + i * xStep,
+
+        y:
+
+          pad.t +
+
+          (
+            1 -
+
+            (
+              (v - min)
+              / range
+            )
+
+          )
+
+          *
+
+          (
+            H - pad.t - pad.b
+          )
+
+      };
+
+    }
+
+
+    ctx.clearRect(
+      0,
+      0,
+      W,
+      H
+    );
+
+
+    // =========================
+    // GRID
+    // =========================
+
+    ctx.strokeStyle = "#f0ede8";
+
+    ctx.lineWidth = 1;
+
+
+    for (let i = 1; i < 4; i++) {
+
+      const y =
+
+        pad.t +
+
+        (
+          H - pad.t - pad.b
+        )
+
+        * (i / 4);
+
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        pad.l,
+        y
+      );
+
+      ctx.lineTo(
+        W - pad.r,
+        y
+      );
+
+      ctx.stroke();
+
+    }
+
+
+    // =========================
+    // AREA FILL
+    // =========================
+
+    const grad = ctx.createLinearGradient(
+      0,
+      pad.t,
+      0,
+      H - pad.b
+    );
+
+
+    grad.addColorStop(
+      0,
+      color + "28"
+    );
+
+
+    grad.addColorStop(
+      1,
+      color + "00"
+    );
+
+
+    const p0 = pt(
+      0,
+      clean[0].value
+    );
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      p0.x,
+      H - pad.b
+    );
+
+
+    ctx.lineTo(
+      p0.x,
+      p0.y
+    );
+
+
+    clean.forEach((p, i) => {
+
+      if (i > 0) {
+
+        const pos = pt(
+          i,
+          p.value
+        );
+
+        ctx.lineTo(
+          pos.x,
+          pos.y
+        );
+
+      }
+
+    });
+
+
+    const pL = pt(
+
+      clean.length - 1,
+
+      clean[
+        clean.length - 1
+      ].value
+
+    );
+
+
+    ctx.lineTo(
+      pL.x,
+      H - pad.b
+    );
+
+
+    ctx.closePath();
+
+
+    ctx.fillStyle = grad;
+
+    ctx.fill();
+
+
+    // =========================
+    // LINE
+    // =========================
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      p0.x,
+      p0.y
+    );
+
+
+    clean.forEach((p, i) => {
+
+      if (i > 0) {
+
+        const pos = pt(
+          i,
+          p.value
+        );
+
+        ctx.lineTo(
+          pos.x,
+          pos.y
+        );
+
+      }
+
+    });
+
+
+    ctx.strokeStyle = color;
+
+    ctx.lineWidth = 2;
+
+    ctx.lineJoin = "round";
+
+    ctx.lineCap = "round";
+
+    ctx.stroke();
+
+
+    // =========================
+    // LAST DOT
+    // =========================
+
+    ctx.beginPath();
+
+    ctx.arc(
+      pL.x,
+      pL.y,
+      4,
+      0,
+      Math.PI * 2
+    );
+
+
+    ctx.fillStyle = color;
+
+    ctx.fill();
+
+
+    ctx.strokeStyle = "#fff";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+
+    // =========================
+    // TIME LABELS
+    // =========================
+
+    ctx.fillStyle = "#a89f94";
+
+    ctx.font =
+      "10px DM Sans,sans-serif";
+
+
+    ctx.textAlign = "left";
+
+    ctx.fillText(
+      clean[0].time,
+      pad.l,
+      H - 6
+    );
+
+
+    ctx.textAlign = "right";
+
+    ctx.fillText(
+      clean[
+        clean.length - 1
+      ].time,
+      W - pad.r,
+      H - 6
+    );
+
+
+    // =========================
+    // SAVE FOR HOVER
+    // =========================
+
+    canvas._pts = clean.map(
+      (p, i) =>
+        pt(i, p.value)
+    );
+
+
+    canvas._data = clean;
+
+    canvas._pad = pad;
+
+  }
+
+
+  draw();
+
+
+  window.addEventListener(
+    "resize",
+    draw
+  );
+
+
+  // =========================
+  // HOVER
+  // =========================
+
+  canvas.addEventListener(
+    "mousemove",
+    e => {
+
+      if (!canvas._pts)
+        return;
+
+
+      const rect =
+        canvas.getBoundingClientRect();
+
+
+      const mx =
+        e.clientX - rect.left;
+
+
+      const pts =
+        canvas._pts;
+
+
+      let ci = 0;
+
+      let md = Infinity;
+
+
+      pts.forEach((p, i) => {
+
+        const d = Math.abs(
+          p.x - mx
+        );
+
+
+        if (d < md) {
+
+          md = d;
+
+          ci = i;
+
+        }
+
+      });
+
+
+      const p = pts[ci];
+
+      const item =
+        canvas._data[ci];
+
+
+      tip.style.display =
+        "block";
+
+
+      tip.style.left =
+        p.x + "px";
+
+
+      tip.style.top =
+        (p.y - 52)
+        + "px";
+
+
+      tip.innerHTML = `
+
+        <div>
+
+          ${fmt(item.value)}
+
+        </div>
+
+        <div
+          style="
+            font-size:10px;
+            opacity:.7;
+            margin-top:2px;
+          "
+        >
+
+          ${item.time}
+
+        </div>
+
+      `;
+
+
+      xhair.style.display =
+        "block";
+
+
+      xhair.style.left =
+        p.x + "px";
+
+
+      xhair.style.top =
+        canvas._pad.t + "px";
+
+
+      xhair.style.height =
+
+        (
+
+          canvas.height
+
+          - canvas._pad.t
+
+          - canvas._pad.b
+
+        ) + "px";
+
+    }
+
+  );
+
+
+  canvas.addEventListener(
+    "mouseleave",
+    () => {
+
+      tip.style.display =
+        "none";
+
+      xhair.style.display =
+        "none";
+
+    }
+  );
+
+}
+
+// ── Market data ────────────────────────────────────────────────────────────
+function mockPrices(base, n=96) {
+  const out=[]; let v=base;
+  for(let i=0;i<n;i++){ v+=(Math.random()-0.49)*base*0.002; out.push(+v.toFixed(2)); }
+  return out;
+}
+
+
+// =========================
+// GLOBAL RANGE
+// =========================
+
+let marketRange = "1d";
+
+
+// =========================
+// CHANGE RANGE
+// =========================
+
+async function changeRange(
+  range,
+  btn
+) {
+
+  marketRange = range;
+
+
+  document
+
+    .querySelectorAll(
+      ".market-toolbar button"
+    )
+
+    .forEach(b => {
+
+      b.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  btn.classList.add(
+    "active"
+  );
+
+
+  await loadMarket();
+
+}
+
+
+// =========================
+// LOAD MARKET
+// =========================
+
+async function loadMarket() {
+
+  // =========================
+  // OIL
+  // =========================
+
+  const oilRes = await fetch(
+
+    `https://intel-dashboard-api.onrender.com/oil?range=${marketRange}`
+
+  );
+
+
+  const oil = await oilRes.json();
+
+
+  const oilP = oil.prices;
+
+  const oilT = oil.timestamps;
+
+  const oilC = oil.current;
+
+  const oilPct = oil.pct;
+
+  const oilUp = oilPct >= 0;
+
+
+  document.getElementById(
+    "oil-price"
+  ).innerHTML = `
+    <sup>$</sup>${oilC}
+  `;
+
+
+  const op = document.getElementById(
+    "oil-pill"
+  );
+
+
+  let oilLabel = "today";
+
+  if (marketRange === "1w") {
+
+    oilLabel = "this week";
+
+  }
+
+  else if (marketRange === "1m") {
+
+    oilLabel = "this month";
+
+  }
+
+
+  op.textContent =
+
+    (oilUp ? "▲ +" : "▼ ")
+
+    + oilPct
+
+    + "% "
+
+    + oilLabel;
+
+
+  op.className =
+
+    "chart-pill "
+
+    + (oilUp ? "up" : "down");
+
+
+  setTimeout(() =>
+
+    setupChart(
+
+      "oil-canvas",
+
+      "oil-wrap",
+
+      "oil-tooltip",
+
+      "oil-crosshair",
+
+      oilP,
+
+      oilT,
+
+      oilUp
+        ? "#2d8c4e"
+        : "#c0392b",
+
+      v => "$" + v.toFixed(2)
+
+    )
+
+  , 100);
+
+
+  // =========================
+  // GOLD
+  // =========================
+
+  const goldRes = await fetch(
+
+    `https://intel-dashboard-api.onrender.com/gold?range=${marketRange}`
+
+  );
+
+
+  const gold = await goldRes.json();
+
+
+  const goldP = gold.prices;
+
+  const goldT = gold.timestamps;
+
+  const goldC = gold.current;
+
+  const goldPct = gold.pct;
+
+  const goldUp = goldPct >= 0;
+
+
+  document.getElementById(
+    "gold-price"
+  ).innerHTML = `
+    <sup>$</sup>${goldC}
+  `;
+
+
+  const gp = document.getElementById(
+    "gold-pill"
+  );
+
+
+  let goldLabel = "today";
+
+  if (marketRange === "1w") {
+
+    goldLabel = "this week";
+
+  }
+
+  else if (marketRange === "1m") {
+
+    goldLabel = "this month";
+
+  }
+
+
+  gp.textContent =
+
+    (goldUp ? "▲ +" : "▼ ")
+
+    + goldPct
+
+    + "% "
+
+    + goldLabel;
+
+
+  gp.className =
+
+    "chart-pill "
+
+    + (goldUp ? "up" : "down");
+
+
+  setTimeout(() =>
+
+    setupChart(
+
+      "gold-canvas",
+
+      "gold-wrap",
+
+      "gold-tooltip",
+
+      "gold-crosshair",
+
+      goldP,
+
+      goldT,
+
+      goldUp
+        ? "#2d8c4e"
+        : "#c0392b",
+
+      v => "$" + v.toFixed(2)
+
+    )
+
+  , 100);
+
+
+  return oilPct;
+
+}
+
+// ── News ───────────────────────────────────────────────────────────────────
+async function loadNews() {
+
+  const list = document.getElementById(
+    "news-list"
+  );
+
+  try {
+    const res = await fetch(
+      "https://intel-dashboard-api.onrender.com/news"
+    );
+
+    const articles = await res.json();
+
+    document.getElementById(
+      "news-count"
+    ).textContent =
+      articles.length + " articles";
+
+
+    list.innerHTML = "";
+
+    const headlines = [];
+
+
+    articles.forEach((article, i) => {
+
+      headlines.push(article.title);
+
+      const div = document.createElement(
+        "div"
+      );
+
+      div.className = "news-item";
+
+      div.style.animationDelay =
+        (i * 40) + "ms";
+
+
+      div.innerHTML = `
+
+        <div class="news-source">
+		  ${article.source}
+		</div>
+
+        <div class="news-title">
+		  ${article.title}
+		</div>
+
+        <div class="news-meta">
+
+          <span class="news-time">
+            ${article.published}
+          </span>
+
+          <span class="news-read-more">
+            Read →
+          </span>
+
+        </div>
+
+      `;
+
+
+      div.onclick = () => {
+
+        window.open(
+          article.link,
+          "_blank"
+        );
+
+      };
+
+
+      list.appendChild(div);
+
+    });
+
+
+    return headlines;
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    list.innerHTML = `
+
+      <div class="loading-state">
+
+        Failed to load news
+
+      </div>
+
+    `;
+  }
+}
+
+// ── Trump Truth Social ─────────────────────────────────────────────────────
+async function loadTrump() {
+
+  const container = document.getElementById(
+    "trump-posts"
+  );
+
+  if (!container) {
+
+    console.error(
+      "Missing #trump-posts"
+    );
+
+    return;
+
+  }
+
+  try {
+
+    const res = await fetch(
+      "https://intel-dashboard-api.onrender.com/trump"
+    );
+
+    const posts = await res.json();
+
+    container.innerHTML = "";
+
+
+    posts.forEach(post => {
+
+      const div = document.createElement(
+        "div"
+      );
+
+      div.className = "trump-post";
+
+
+      let content = post.content;
+
+
+      // limit size
+
+      if (content.length > 220) {
+
+        content =
+
+          content.substring(0, 220)
+
+          + "...";
+
+      }
+
+
+		div.innerHTML = `
+
+			<div class="trump-header">
+
+				<div class="trump-avatar">
+
+					DT
+
+				</div>
+
+				<div class="trump-user">
+
+					<div class="trump-name">
+
+						Donald J. Trump
+
+					</div>
+
+					<div class="trump-handle">
+
+						@realDonaldTrump
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="trump-content">
+
+				${content}
+
+			</div>
+
+			<div class="trump-time">
+
+				${post.time_ago}
+
+			</div>
+
+`;
+
+
+      div.onclick = () => {
+
+        window.open(
+          post.link,
+          "_blank"
+        );
+
+      };
+
+
+      container.appendChild(div);
+
+    });
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    container.innerHTML = `
+
+      <div class="loading-state">
+
+        Failed to load posts
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+// ── Sentiment ──────────────────────────────────────────────────────────────
+const POS=['rally','gain','surge','rise','record','strong','deal','peace','agreement','ceasefire','stable','recover','progress','positive'];
+const NEG=['war','conflict','sanctions','attack','crisis','fall','crash','risk','escalat','threat','military','strike','tension','fear','decline','recession'];
+
+function computeSentiment(
+  headlines,
+  oilPct
+) {
+
+  let positive = 0;
+  let negative = 0;
+
+  let iranRisk = 0;
+
+  let risk = 50;
+
+
+  // =========================
+  // POSITIVE SIGNALS
+  // =========================
+
+  const POS = [
+
+    "ceasefire",
+    "peace",
+    "deal",
+    "agreement",
+    "truce",
+    "negotiation",
+    "diplomatic"
+
+  ];
+
+
+  // =========================
+  // NEGATIVE SIGNALS
+  // =========================
+
+  const NEG = [
+
+    "war",
+    "attack",
+    "missile",
+    "military",
+    "strike",
+    "conflict",
+    "invasion",
+    "troops",
+    "sanctions"
+
+  ];
+
+
+  // =========================
+  // IRAN / OIL ESCALATION
+  // =========================
+
+  const IRAN_RISK = [
+
+    "iran",
+    "hormuz",
+    "strait of hormuz",
+    "blockade",
+    "mines",
+    "oil tanker",
+    "missile",
+    "attack ship",
+    "naval",
+    "seized ships"
+
+  ];
+
+
+  // =========================
+  // ANALYZE HEADLINES
+  // =========================
+
+  headlines.forEach(article => {
+
+    const text = (
+
+      typeof article === "string"
+
+        ? article
+
+        : article.title || ""
+
+    ).toLowerCase();
+
+
+    // positive signals
+
+    POS.forEach(word => {
+
+      if (text.includes(word)) {
+
+        positive++;
+
+        risk += 3;
+
+      }
+
+    });
+
+
+    // negative signals
+
+    NEG.forEach(word => {
+
+      if (text.includes(word)) {
+
+        negative++;
+
+        risk -= 4;
+
+      }
+
+    });
+
+
+    // iran escalation
+    // only trigger once per article
+
+    let iranTriggered = false;
+
+
+    IRAN_RISK.forEach(word => {
+
+      if (
+
+        text.includes(word)
+
+        && !iranTriggered
+
+      ) {
+
+        iranRisk++;
+
+        risk -= 8;
+
+        iranTriggered = true;
+
+      }
+
+    });
+
+  });
+
+
+  // =========================
+  // OIL IMPACT
+  // =========================
+
+  if (oilPct > 8) {
+
+    risk -= 25;
+
+  }
+
+  else if (oilPct > 5) {
+
+    risk -= 15;
+
+  }
+
+  else if (oilPct > 3) {
+
+    risk -= 8;
+
+  }
+
+
+  if (oilPct < -3) {
+
+    risk += 5;
+
+  }
+
+
+  // =========================
+  // LIMIT SCORE
+  // =========================
+
+  risk = Math.max(
+    5,
+    Math.min(risk, 95)
+  );
+
+
+  // =========================
+  // DRAW GAUGE
+  // =========================
+
+  const canvas =
+    document.getElementById(
+      "gauge"
+    );
+
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  const cx = 80;
+  const cy = 78;
+  const r = 60;
+
+
+  ctx.clearRect(
+    0,
+    0,
+    160,
+    90
+  );
+
+
+  // background arc
+
+  ctx.beginPath();
+
+  ctx.arc(
+    cx,
+    cy,
+    r,
+    Math.PI,
+    0
+  );
+
+  ctx.lineWidth = 13;
+
+  ctx.strokeStyle =
+    "#f0ede8";
+
+  ctx.stroke();
+
+
+  // gauge color
+
+  const color =
+
+    risk > 70
+
+      ? "#2d8c4e"
+
+      : risk > 45
+
+      ? "#e8640c"
+
+      : "#c0392b";
+
+
+  // active arc
+
+  ctx.beginPath();
+
+  ctx.arc(
+
+    cx,
+
+    cy,
+
+    r,
+
+    Math.PI,
+
+    Math.PI +
+
+      (risk / 100)
+
+      * Math.PI
+
+  );
+
+
+  ctx.lineWidth = 13;
+
+  ctx.strokeStyle =
+    color;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.stroke();
+
+
+  // =========================
+  // SCORE DISPLAY
+  // =========================
+
+  document.getElementById(
+    "sent-score"
+  ).textContent =
+
+    risk + "%";
+
+
+  document.getElementById(
+    "sent-score"
+  ).style.color = color;
+
+
+  // =========================
+  // LABEL
+  // =========================
+
+  let label =
+    "STABLE";
+
+
+  if (risk > 75) {
+
+    label = "LOW RISK";
+
+  }
+
+  else if (risk > 55) {
+
+    label = "CAUTIOUS";
+
+  }
+
+  else if (risk > 40) {
+
+    label = "RISK-OFF";
+
+  }
+
+  else {
+
+    label = "HIGH RISK";
+
+  }
+
+
+  document.getElementById(
+    "sent-label"
+  ).textContent = label;
+
+
+  // =========================
+  // SIGNALS PANEL
+  // =========================
+
+  document.getElementById(
+    "sent-signals"
+  ).innerHTML = `
+
+    <div class="signal-card">
+
+      <div class="signal-card-label">
+
+        Positive Signals
+
+      </div>
+
+      <div
+        class="signal-card-value"
+        style="color:var(--up)"
+
+      >
+
+        ${positive}
+
+      </div>
+
+    </div>
+
+
+    <div class="signal-card">
+
+      <div class="signal-card-label">
+
+        Negative Signals
+
+      </div>
+
+      <div
+        class="signal-card-value"
+        style="color:var(--down)"
+
+      >
+
+        ${negative}
+
+      </div>
+
+    </div>
+
+
+    <div class="signal-card">
+
+      <div class="signal-card-label">
+
+        Iran Escalation
+
+      </div>
+
+      <div
+        class="signal-card-value"
+        style="color:#c0392b"
+
+      >
+
+        ${iranRisk}
+
+      </div>
+
+    </div>
+
+
+    <div class="signal-card">
+
+      <div class="signal-card-label">
+
+        Oil 24h Move
+
+      </div>
+
+      <div
+        class="signal-card-value"
+
+        style="color:${
+          oilPct >= 0
+          ? 'var(--up)'
+          : 'var(--down)'
+        }"
+
+      >
+
+        ${
+          oilPct >= 0
+          ? '▲'
+          : '▼'
+        }
+
+        ${Math.abs(
+          oilPct
+        ).toFixed(1)}%
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+async function refreshAll() {
+  document.getElementById('news-list').innerHTML='<div class="loading-state">Fetching latest news…</div>';
+  document.getElementById('trump-posts').innerHTML='<div class="loading-state">Fetching truths…</div>';
+  const [oilPct, headlines] = await Promise.all([loadMarket(), loadNews(), loadTrump()]);
+  setTimeout(()=>computeSentiment(headlines||[], oilPct||0), 800);
+}
+
+refreshAll();
+
+
+// market refresh
+
+setInterval(() => {
+
+  loadMarket();
+
+}, 30000);
+
+
+// news + trump + sentiment
+
+setInterval(async () => {
+
+  const headlines = await loadNews();
+
+  await loadTrump();
+
+  const oilPct = await loadMarket();
+
+  computeSentiment(
+    headlines || [],
+    oilPct || 0
+  );
+
+}, 300000);
+</script>
+</body>
+</html>
